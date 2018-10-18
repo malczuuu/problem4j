@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public final class Problem implements Serializable {
+public class Problem implements Serializable {
 
   public static final URI BLANK_TYPE = URI.create("about:blank");
   public static final String CONTENT_TYPE = "application/problem+json";
@@ -113,21 +113,11 @@ public final class Problem implements Serializable {
   @Override
   public String toString() {
     return "("
-        + "type="
-        + type
-        + ", "
-        + "title="
-        + title
-        + ", "
-        + "status="
-        + status
-        + ", "
-        + "detail="
-        + detail
-        + ", "
-        + "instance="
-        + instance
-        + ", "
+        + "type=" + type + ", "
+        + "title=" + title + ", "
+        + "status=" + status + ", "
+        + "detail=" + detail + ", "
+        + "instance=" + instance + ", "
         + extensions
             .entrySet()
             .stream()
