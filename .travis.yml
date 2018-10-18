@@ -1,0 +1,12 @@
+os: linux
+group: stable
+dist: trusty
+
+language: java
+
+cache:
+  directories:
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
+
+script: ./gradlew check

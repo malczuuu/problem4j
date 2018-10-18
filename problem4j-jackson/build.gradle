@@ -1,0 +1,14 @@
+dependencies {
+    api "com.fasterxml.jackson.core:jackson-databind:2.9.7"
+    api "org.slf4j:slf4j-api:1.7.25"
+    api "com.google.guava:guava:26.0-jre"
+
+    api project(":problem4j-core")
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.1")
+}
+
+test {
+    useJUnitPlatform()
+}

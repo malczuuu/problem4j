@@ -1,0 +1,44 @@
+subprojects {
+    apply plugin: "java-library"
+    apply plugin: "maven"
+
+    repositories {
+        mavenCentral()
+    }
+
+    group = "pl.malczuuu.problem4j"
+    version = "0.2.0"
+    version = "0.2.0"
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = "sources"
+        from sourceSets.main.allSource
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = "javadoc"
+        from javadoc.destinationDir
+    }
+
+    artifacts {
+        archives sourcesJar
+        archives javadocJar
+    }
+
+    // To specify a license in the pom:
+    install {
+        repositories.mavenInstaller {
+            pom.project {
+                licenses {
+                    license {
+                        name "MIT License"
+                        url "https://github.com/malczuuu/problem4j/blob/master/LICENSE"
+                        distribution "repo"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,14 @@
+.gradle/
+/build/
+/out/
+/problem4j-core/out/
+/problem4j-core/build/
+/problem4j-jackson/out/
+/problem4j-jackson/build/
+/problem4j-spring/out/
+/problem4j-spring/build/
+
+### IDEs ###
+/.idea/
+/.vscode/
+*.iml

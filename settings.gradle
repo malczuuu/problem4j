@@ -1,0 +1,5 @@
+rootProject.name = "problem4j"
+
+include ":problem4j-core"
+include ":problem4j-jackson"
+include ":problem4j-spring"
