@@ -34,22 +34,4 @@
 
     You can change default responses on predefined exception by declaring custom bean of type `ProblemSupplier`.
 
-3.  Configure Jackson module.
-
-    ```java
-    import com.fasterxml.jackson.databind.Module;
-    import org.springframework.context.annotation.Bean;
-    import org.springframework.context.annotation.Configuration;
-    import pl.malczuuu.problem4j.jackson.ProblemModuleFactory;
-
-    @Configuration
-    public class JacksonConfiguration {
-
-      @Bean
-      public Module problemModule() {
-        return new ProblemModuleFactory().create();
-      }
-    }
-    ```
-
-4.  Throw `ProblemException` or it's subclasses from anywhere in your REST methods. All errors will be automatically handled and status will be returned to user.
+3.  Throw `ProblemException` or it's subclasses from anywhere in your REST methods. All errors will be automatically handled and status will be returned to user.
