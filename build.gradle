@@ -7,8 +7,8 @@ subprojects {
     }
 
     group = "pl.malczuuu.problem4j"
-    version = "0.2.0"
-    version = "0.2.0"
+    version = "0.1.0-SNAPSHOT"
+    version = "0.1.0-SNAPSHOT"
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
@@ -25,20 +25,5 @@ subprojects {
     artifacts {
         archives sourcesJar
         archives javadocJar
-    }
-
-    // To specify a license in the pom:
-    install {
-        repositories.mavenInstaller {
-            pom.project {
-                licenses {
-                    license {
-                        name "MIT License"
-                        url "https://github.com/malczuuu/problem4j/blob/master/LICENSE"
-                        distribution "repo"
-                    }
-                }
-            }
-        }
     }
 }
