@@ -1,6 +1,5 @@
 package pl.malczuuu.problem4j.core;
 
-import java.io.Serializable;
 import java.net.URI;
 
 public interface ProblemBuilder {
@@ -15,7 +14,7 @@ public interface ProblemBuilder {
 
   ProblemBuilder instance(URI instance);
 
-  ProblemBuilder extension(String name, Serializable value);
+  ProblemBuilder extension(String name, Object value);
 
   Problem build();
 }

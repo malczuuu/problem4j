@@ -1,6 +1,5 @@
 package pl.malczuuu.problem4j.core;
 
-import java.io.Serializable;
 import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -12,7 +11,7 @@ final class ProblemBuilderImpl implements ProblemBuilder {
   private int status;
   private String detail;
   private URI instance;
-  private Map<String, Serializable> extensions = new LinkedHashMap<>();
+  private Map<String, Object> extensions = new LinkedHashMap<>();
 
   ProblemBuilderImpl() {}
 
@@ -47,7 +46,7 @@ final class ProblemBuilderImpl implements ProblemBuilder {
   }
 
   @Override
-  public ProblemBuilder extension(String name, Serializable value) {
+  public ProblemBuilder extension(String name, Object value) {
     extensions.remove(name);
     extensions.put(name, value);
     return this;

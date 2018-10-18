@@ -10,7 +10,6 @@ import java.util.Set;
 
 public final class Problem implements Serializable {
 
-  private static final long serialVersionUID = 1L;
   public static final URI BLANK_TYPE = URI.create("about:blank");
   public static final String CONTENT_TYPE = "application/problem+json";
 
@@ -29,7 +28,7 @@ public final class Problem implements Serializable {
     return builder;
   }
 
-  public static Extension extension(String key, Serializable value) {
+  public static Extension extension(String key, Object value) {
     return new Extension(key, value);
   }
 
@@ -38,7 +37,7 @@ public final class Problem implements Serializable {
   private final int status;
   private final String detail;
   private final URI instance;
-  private final Map<String, Serializable> extensions;
+  private final Map<String, Object> extensions;
 
   public Problem(
       URI type,
@@ -46,7 +45,7 @@ public final class Problem implements Serializable {
       int status,
       String detail,
       URI instance,
-      Map<String, Serializable> extensions) {
+      Map<String, Object> extensions) {
     this.type = type;
     this.title = title;
     this.status = status;
@@ -65,14 +64,14 @@ public final class Problem implements Serializable {
     this(type, title, status, detail, instance, buildMapFromExtensions(extensions));
   }
 
-  private static Map<String, Serializable> buildMapFromExtensions(Set<Extension> extensions) {
-    Map<String, Serializable> map = new HashMap<>(extensions.size());
+  private static Map<String, Object> buildMapFromExtensions(Set<Extension> extensions) {
+    Map<String, Object> map = new HashMap<>(extensions.size());
     extensions.forEach(e -> map.put(e.getKey(), e.getValue()));
     return map;
   }
 
-  private static Map<String, Serializable> buildMapFromExtensions(Extension[] extensions) {
-    Map<String, Serializable> map = new HashMap<>(extensions.length);
+  private static Map<String, Object> buildMapFromExtensions(Extension[] extensions) {
+    Map<String, Object> map = new HashMap<>(extensions.length);
     for (Problem.Extension e : extensions) {
       map.put(e.getKey(), e.getValue());
     }
@@ -103,7 +102,7 @@ public final class Problem implements Serializable {
     return Collections.unmodifiableSet(extensions.keySet());
   }
 
-  public Serializable getExtensionValue(String name) {
+  public Object getExtensionValue(String name) {
     return extensions.get(name);
   }
 
@@ -136,14 +135,12 @@ public final class Problem implements Serializable {
             .reduce((s1, s2) -> s1 + "," + s2);
   }
 
-  public static final class Extension implements Map.Entry<String, Serializable>, Serializable {
-
-    private static final long serialVersionUID = 1L;
+  public static final class Extension implements Map.Entry<String, Object> {
 
     private final String key;
-    private Serializable value;
+    private Object value;
 
-    private Extension(String key, Serializable value) {
+    private Extension(String key, Object value) {
       this.key = key;
       this.value = value;
     }
@@ -154,12 +151,12 @@ public final class Problem implements Serializable {
     }
 
     @Override
-    public Serializable getValue() {
+    public Object getValue() {
       return value;
     }
 
     @Override
-    public Serializable setValue(Serializable value) {
+    public Object setValue(Object value) {
       this.value = value;
       return value;
     }
