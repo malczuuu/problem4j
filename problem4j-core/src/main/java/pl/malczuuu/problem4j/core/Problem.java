@@ -116,7 +116,7 @@ public class Problem implements Serializable {
         + "type=" + type + ", "
         + "title='" + title + "', "
         + "status=" + status + ", "
-        + "detail='" + detail
+        + "detail='" + detail + "'"
         + (instance != null ? ", instance=" + instance : "")
         + extensions
             .entrySet()
