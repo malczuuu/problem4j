@@ -24,10 +24,6 @@ import pl.malczuuu.problem4j.core.ProblemException;
 
 public abstract class AbstractProblemSupplier implements ProblemSupplier {
 
-  protected URI blankURI() {
-    return URI.create("about:blank");
-  }
-
   @Override
   public ProblemBuilder from(ProblemException ex) {
     return Problem.builder(ex.getProblem());
@@ -36,7 +32,7 @@ public abstract class AbstractProblemSupplier implements ProblemSupplier {
   @Override
   public ProblemBuilder from(HttpRequestMethodNotSupportedException ex) {
     return Problem.builder()
-        .type(blankURI())
+        .type(Problem.BLANK_TYPE)
         .title("Method not allowed")
         .status(405)
         .detail("Method " + ex.getMethod() + " is not supported")
@@ -46,7 +42,7 @@ public abstract class AbstractProblemSupplier implements ProblemSupplier {
   @Override
   public ProblemBuilder from(HttpMediaTypeNotSupportedException ex) {
     return Problem.builder()
-        .type(blankURI())
+        .type(Problem.BLANK_TYPE)
         .title("Unsupported media type")
         .status(415)
         .detail("Request with media type " + ex.getContentType() + " cannot be processed")
@@ -56,7 +52,7 @@ public abstract class AbstractProblemSupplier implements ProblemSupplier {
   @Override
   public ProblemBuilder from(HttpMediaTypeNotAcceptableException ex) {
     return Problem.builder()
-        .type(blankURI())
+        .type(Problem.BLANK_TYPE)
         .title("Not acceptable")
         .status(406)
         .detail(
@@ -67,7 +63,7 @@ public abstract class AbstractProblemSupplier implements ProblemSupplier {
   @Override
   public ProblemBuilder from(MissingPathVariableException ex) {
     return Problem.builder()
-        .type(blankURI())
+        .type(Problem.BLANK_TYPE)
         .title("Bad request")
         .status(400)
         .detail("Request without path variable " + ex.getVariableName() + " cannot be processed")
@@ -77,7 +73,7 @@ public abstract class AbstractProblemSupplier implements ProblemSupplier {
   @Override
   public ProblemBuilder from(MissingServletRequestParameterException ex) {
     return Problem.builder()
-        .type(blankURI())
+        .type(Problem.BLANK_TYPE)
         .title("Bad request")
         .status(400)
         .detail(
@@ -93,7 +89,7 @@ public abstract class AbstractProblemSupplier implements ProblemSupplier {
   @Override
   public ProblemBuilder from(ServletRequestBindingException ex) {
     return Problem.builder()
-        .type(blankURI())
+        .type(Problem.BLANK_TYPE)
         .title("Bad request")
         .status(400)
         .detail(ex.getMessage());
@@ -102,7 +98,7 @@ public abstract class AbstractProblemSupplier implements ProblemSupplier {
   @Override
   public ProblemBuilder from(ConversionNotSupportedException ex) {
     return Problem.builder()
-        .type(blankURI())
+        .type(Problem.BLANK_TYPE)
         .title("Internal server error")
         .status(500)
         .detail("Failed to return a response for the client");
@@ -111,7 +107,7 @@ public abstract class AbstractProblemSupplier implements ProblemSupplier {
   @Override
   public ProblemBuilder from(TypeMismatchException ex) {
     return Problem.builder()
-        .type(blankURI())
+        .type(Problem.BLANK_TYPE)
         .title("Bad request")
         .status(400)
         .detail(
@@ -121,7 +117,7 @@ public abstract class AbstractProblemSupplier implements ProblemSupplier {
   @Override
   public ProblemBuilder from(HttpMessageNotReadableException ex) {
     return Problem.builder()
-        .type(blankURI())
+        .type(Problem.BLANK_TYPE)
         .title("Bad request")
         .status(400)
         .detail("Request is not readable");
@@ -130,7 +126,7 @@ public abstract class AbstractProblemSupplier implements ProblemSupplier {
   @Override
   public ProblemBuilder from(HttpMessageNotWritableException ex) {
     return Problem.builder()
-        .type(blankURI())
+        .type(Problem.BLANK_TYPE)
         .title("Internal server error")
         .status(500)
         .detail("Failed to return a response for the client");
@@ -142,17 +138,17 @@ public abstract class AbstractProblemSupplier implements ProblemSupplier {
   }
 
   private ProblemBuilder from(BindingResult bindingResult) {
-    ArrayList<ValidationDetail> details = new ArrayList<>();
+    ArrayList<ValidationError> details = new ArrayList<>();
     ArrayList<String> fields = new ArrayList<>();
     bindingResult
         .getFieldErrors()
         .forEach(
             f -> {
-              details.add(new ValidationDetail(f.getField(), f.getDefaultMessage()));
+              details.add(new ValidationError(f.getField(), f.getDefaultMessage()));
               fields.add(f.getField());
             });
     return Problem.builder()
-        .type(blankURI())
+        .type(Problem.BLANK_TYPE)
         .title("Unprocessable entity")
         .status(422)
         .detail(
@@ -164,7 +160,7 @@ public abstract class AbstractProblemSupplier implements ProblemSupplier {
   @Override
   public ProblemBuilder from(MissingServletRequestPartException ex) {
     return Problem.builder()
-        .type(blankURI())
+        .type(Problem.BLANK_TYPE)
         .title("Bad request")
         .status(400)
         .detail("Request without part " + ex.getRequestPartName() + " cannot be processed")
@@ -179,7 +175,7 @@ public abstract class AbstractProblemSupplier implements ProblemSupplier {
   @Override
   public ProblemBuilder from(NoHandlerFoundException ex) {
     return Problem.builder()
-        .type(blankURI())
+        .type(Problem.BLANK_TYPE)
         .title("Not found")
         .status(404)
         .detail("Handler not found")
@@ -189,9 +185,18 @@ public abstract class AbstractProblemSupplier implements ProblemSupplier {
   @Override
   public ProblemBuilder from(AsyncRequestTimeoutException ex) {
     return Problem.builder()
-        .type(blankURI())
+        .type(Problem.BLANK_TYPE)
         .title("Internal server error")
         .status(500)
         .detail("Server timeout");
+  }
+
+  @Override
+  public ProblemBuilder from(Exception ex) {
+    return Problem.builder()
+        .type(Problem.BLANK_TYPE)
+        .title("Internal server error")
+        .status(500)
+        .detail("An unknown error occurred");
   }
 }

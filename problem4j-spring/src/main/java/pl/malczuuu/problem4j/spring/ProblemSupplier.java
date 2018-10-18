@@ -51,4 +51,6 @@ public interface ProblemSupplier {
   ProblemBuilder from(NoHandlerFoundException ex);
 
   ProblemBuilder from(AsyncRequestTimeoutException ex);
+
+  ProblemBuilder from(Exception ex);
 }

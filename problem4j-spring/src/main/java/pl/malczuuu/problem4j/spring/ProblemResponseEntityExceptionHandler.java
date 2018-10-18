@@ -1,6 +1,8 @@
 package pl.malczuuu.problem4j.spring;
 
 import java.time.Instant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
@@ -29,13 +32,13 @@ import pl.malczuuu.problem4j.core.ProblemException;
 import pl.malczuuu.problem4j.core.UnauthorizedException;
 
 @SuppressWarnings("NullableProblems")
+@RestControllerAdvice
 public class ProblemResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-  private final ProblemSupplier problemSupplier;
+  private static final Logger log =
+      LoggerFactory.getLogger(ProblemResponseEntityExceptionHandler.class);
 
-  public ProblemResponseEntityExceptionHandler() {
-    this(new DefaultProblemSupplier());
-  }
+  private final ProblemSupplier problemSupplier;
 
   public ProblemResponseEntityExceptionHandler(ProblemSupplier problemSupplier) {
     this.problemSupplier = problemSupplier;
@@ -58,6 +61,14 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
     HttpHeaders headers = new HttpHeaders();
     headers.set("WWW-Authenticate", "Basic realm=\"Basic\", charset=\"UTF-8\"");
     return handleExceptionInternal(ex, problem, headers, status, request);
+  }
+
+  @ExceptionHandler({Exception.class})
+  public ResponseEntity<Object> handleOtherException(Exception ex, WebRequest request) {
+    log.error("Unhandled exception {}", ex.getClass().getName(), ex);
+    Problem problem = problemSupplier.from(ex).build();
+    HttpStatus status = HttpStatus.valueOf(problem.getStatus());
+    return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
   }
 
   @Override
