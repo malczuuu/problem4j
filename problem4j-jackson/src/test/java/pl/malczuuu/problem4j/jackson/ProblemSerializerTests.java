@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.net.URI;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -42,5 +43,10 @@ class ProblemSerializerTests {
   void testProblemSerializerOK() throws JsonProcessingException {
     String problemJson = mapper.writeValueAsString(problem);
     assertEquals(json, problemJson);
+  }
+
+  @Test
+  void testDeserialize() throws IOException {
+    Problem deserialized = mapper.readValue(json,Problem.class);
   }
 }
