@@ -1,5 +1,6 @@
 package pl.malczuuu.problem4j.core;
 
+import com.google.common.base.Strings;
 import java.net.URI;
 import java.util.HashMap;
 
@@ -8,12 +9,19 @@ public class ProblemException extends RuntimeException {
   private final Problem problem;
 
   private ProblemException(Problem problem) {
-    super(problem.getDetail());
+    super(
+        problem.getTitle()
+            + (!Strings.isNullOrEmpty(problem.getDetail())
+                ? " [" + problem.getDetail() + "]"
+                : ""));
     this.problem = problem;
   }
 
   private ProblemException(Problem problem, Throwable cause) {
-    super(problem.getDetail(), cause);
+    super(
+        problem.getTitle()
+            + (!Strings.isNullOrEmpty(problem.getDetail()) ? " [" + problem.getDetail() + "]" : ""),
+        cause);
     this.problem = problem;
   }
 

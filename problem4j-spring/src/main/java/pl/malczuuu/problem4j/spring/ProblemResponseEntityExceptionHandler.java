@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -39,27 +40,25 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
       LoggerFactory.getLogger(ProblemResponseEntityExceptionHandler.class);
 
   private final ProblemSupplier problemSupplier;
+  private final boolean showLoginFormOnUnauthorized;
 
-  public ProblemResponseEntityExceptionHandler(ProblemSupplier problemSupplier) {
+  public ProblemResponseEntityExceptionHandler(
+      ProblemSupplier problemSupplier,
+      @Value("${problem.show-login-form-on-unauthorized:false}")
+          boolean showLoginFormOnUnauthorized) {
     this.problemSupplier = problemSupplier;
+    this.showLoginFormOnUnauthorized = showLoginFormOnUnauthorized;
   }
 
   @ExceptionHandler({ProblemException.class})
   public ResponseEntity<Object> handleProblemException(ProblemException ex, WebRequest request) {
-    if (ex instanceof UnauthorizedException) {
-      return handleUnauthorizedException((UnauthorizedException) ex, request);
-    }
     Problem problem = problemSupplier.from(ex).build();
-    HttpStatus status = HttpStatus.valueOf(problem.getStatus());
-    return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
-  }
-
-  private ResponseEntity<Object> handleUnauthorizedException(
-      UnauthorizedException ex, WebRequest request) {
-    Problem problem = ex.getProblem();
-    HttpStatus status = HttpStatus.valueOf(problem.getStatus());
+    log.warn("Problem {} occurred details={}", ex.getClass().getName(), problem, ex);
     HttpHeaders headers = new HttpHeaders();
-    headers.set("WWW-Authenticate", "Basic realm=\"Basic\", charset=\"UTF-8\"");
+    if (ex instanceof UnauthorizedException && showLoginFormOnUnauthorized) {
+      headers.set("WWW-Authenticate", "Basic realm=\"Basic\", charset=\"UTF-8\"");
+    }
+    HttpStatus status = HttpStatus.valueOf(problem.getStatus());
     return handleExceptionInternal(ex, problem, headers, status, request);
   }
 

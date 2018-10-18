@@ -114,15 +114,18 @@ public class Problem implements Serializable {
   public String toString() {
     return "("
         + "type=" + type + ", "
-        + "title=" + title + ", "
+        + "title='" + title + "', "
         + "status=" + status + ", "
-        + "detail=" + detail + ", "
-        + "instance=" + instance + ", "
+        + "detail='" + detail
+        + (instance != null ? ", instance=" + instance : "")
         + extensions
             .entrySet()
             .stream()
             .map(e -> e.getKey() + "=" + e.getValue())
-            .reduce((s1, s2) -> s1 + "," + s2);
+            .reduce((s1, s2) -> s1 + "," + s2)
+            .map(s -> ", " + s)
+            .orElse("")
+        + ")";
   }
 
   public static final class Extension implements Map.Entry<String, Object> {
