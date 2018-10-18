@@ -36,7 +36,7 @@ class ProblemSerializerTests {
 
   @BeforeEach
   void beforeEach() {
-    mapper.registerModule(new ProblemModuleFactory().create());
+    mapper.registerModule(new ProblemModule());
   }
 
   @Test
@@ -47,6 +47,6 @@ class ProblemSerializerTests {
 
   @Test
   void testDeserialize() throws IOException {
-    Problem deserialized = mapper.readValue(json,Problem.class);
+    Problem deserialized = mapper.readValue(json, Problem.class);
   }
 }

@@ -12,16 +12,12 @@ import java.util.Iterator;
 import pl.malczuuu.problem4j.core.Problem;
 import pl.malczuuu.problem4j.core.ProblemBuilder;
 
-public final class ProblemDeserializer extends StdDeserializer<Problem> {
+final class ProblemDeserializer extends StdDeserializer<Problem> {
 
   private final ObjectMapper mapper = new ObjectMapper();
 
-  public ProblemDeserializer() {
-    this(Problem.class);
-  }
-
-  protected ProblemDeserializer(Class<?> vc) {
-    super(vc);
+  ProblemDeserializer() {
+    super(Problem.class);
   }
 
   @Override

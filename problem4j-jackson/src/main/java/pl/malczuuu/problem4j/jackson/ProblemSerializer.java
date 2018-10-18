@@ -6,14 +6,10 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import pl.malczuuu.problem4j.core.Problem;
 import java.io.IOException;
 
-public final class ProblemSerializer extends StdSerializer<Problem> {
+final class ProblemSerializer extends StdSerializer<Problem> {
 
-  public ProblemSerializer() {
-    this(Problem.class);
-  }
-
-  protected ProblemSerializer(Class<Problem> t) {
-    super(t);
+  ProblemSerializer() {
+    super(Problem.class);
   }
 
   @Override
