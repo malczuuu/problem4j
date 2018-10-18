@@ -17,7 +17,6 @@ HTTP exceptions are located in `pl.malczuuu.problem4j.core` package.
 | `415` | `Unsupported Media Type`             | `UnsupportedMediaTypeException`            |
 | `418` | `I'm a Teapot`                       | `ImATeapotException`                       |
 | `422` | `Unprocessable Entity`               | `UnprocessableEntityException`             |
-| `423` | `Locked`                             | `LockedException`                          |
 | `451` | `Unavailable For Legal Reasons`      | `UnavailableForLegalReasonsException`      |
 | `500` | `Internal Server Error`              | `InternalServerErrorException`             |
 | `501` | `Not Implemented`                    | `NotImplementedException`                  |
