@@ -1,4 +1,4 @@
-package pl.malczuuu.problem4j.spring;
+package pl.malczuuu.problem4j.spring.web;
 
 import java.net.URI;
 import java.util.ArrayList;

@@ -1,3 +1,3 @@
-package pl.malczuuu.problem4j.spring;
+package pl.malczuuu.problem4j.spring.web;
 
 class DefaultProblemSupplier extends AbstractProblemSupplier {}

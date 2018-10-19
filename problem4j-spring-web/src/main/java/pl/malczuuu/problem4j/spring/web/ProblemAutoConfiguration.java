@@ -1,4 +1,4 @@
-package pl.malczuuu.problem4j.spring;
+package pl.malczuuu.problem4j.spring.web;
 
 import com.fasterxml.jackson.databind.Module;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

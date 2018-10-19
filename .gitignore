@@ -5,8 +5,8 @@
 /problem4j-core/build/
 /problem4j-jackson/out/
 /problem4j-jackson/build/
-/problem4j-spring/out/
-/problem4j-spring/build/
+/problem4j-spring-web/out/
+/problem4j-spring-web/build/
 
 ### IDEs ###
 /.idea/

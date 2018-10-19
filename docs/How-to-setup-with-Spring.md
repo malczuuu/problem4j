@@ -24,7 +24,7 @@
 
     ```java
     import org.springframework.context.annotation.Configuration;
-    import pl.malczuuu.problem4j.spring.EnableProblem;
+    import EnableProblem;
     
     @Configuration
     @EnableProblem

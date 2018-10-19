@@ -1,4 +1,4 @@
-package pl.malczuuu.problem4j.spring;
+package pl.malczuuu.problem4j.spring.web;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,4 +1,4 @@
-package pl.malczuuu.problem4j.spring;
+package pl.malczuuu.problem4j.spring.web;
 
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
