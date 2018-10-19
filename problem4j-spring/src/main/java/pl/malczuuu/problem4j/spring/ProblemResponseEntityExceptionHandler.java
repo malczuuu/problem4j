@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,22 +39,19 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
       LoggerFactory.getLogger(ProblemResponseEntityExceptionHandler.class);
 
   private final ProblemSupplier problemSupplier;
-  private final boolean showLoginFormOnUnauthorized;
+  private final ProblemProperties properties;
 
   public ProblemResponseEntityExceptionHandler(
-      ProblemSupplier problemSupplier,
-      @Value("${problem.show-login-form-on-unauthorized:false}")
-          boolean showLoginFormOnUnauthorized) {
+      ProblemSupplier problemSupplier, ProblemProperties properties) {
     this.problemSupplier = problemSupplier;
-    this.showLoginFormOnUnauthorized = showLoginFormOnUnauthorized;
+    this.properties = properties;
   }
 
   @ExceptionHandler({ProblemException.class})
   public ResponseEntity<Object> handleProblemException(ProblemException ex, WebRequest request) {
     Problem problem = problemSupplier.from(ex).build();
-    log.warn("Problem {} occurred details={}", ex.getClass().getName(), problem, ex);
     HttpHeaders headers = new HttpHeaders();
-    if (ex instanceof UnauthorizedException && showLoginFormOnUnauthorized) {
+    if (ex instanceof UnauthorizedException && properties.isShowLoginFormOnUnauthorized()) {
       headers.set("WWW-Authenticate", "Basic realm=\"Basic\", charset=\"UTF-8\"");
     }
     HttpStatus status = HttpStatus.valueOf(problem.getStatus());
@@ -64,7 +60,6 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
 
   @ExceptionHandler({Exception.class})
   public ResponseEntity<Object> handleOtherException(Exception ex, WebRequest request) {
-    log.error("Unhandled exception {}", ex.getClass().getName(), ex);
     Problem problem = problemSupplier.from(ex).build();
     HttpStatus status = HttpStatus.valueOf(problem.getStatus());
     return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
@@ -226,6 +221,17 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
     headers.setContentType(MediaType.APPLICATION_PROBLEM_JSON);
     if (body instanceof Problem) {
       body = enhanceProblem((Problem) body);
+      if (properties.isLogExceptions()) {
+        log.warn(
+            "Exception {} with message='{}' occurred, details={}",
+            ex.getClass().getSimpleName(), ex.getMessage(), body, ex);
+      }
+    } else {
+      if (properties.isLogExceptions()) {
+        log.warn(
+            "Exception {} with message='{}' occurred",
+            ex.getClass().getSimpleName(), ex.getMessage(), ex);
+      }
     }
     return super.handleExceptionInternal(ex, body, headers, status, request);
   }
