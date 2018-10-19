@@ -1,6 +1,5 @@
 package pl.malczuuu.problem4j.core;
 
-import com.google.common.collect.ImmutableMap;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.Collections;
@@ -51,7 +50,7 @@ public class Problem implements Serializable {
     this.status = status;
     this.detail = detail;
     this.instance = instance;
-    this.extensions = ImmutableMap.copyOf(extensions);
+    this.extensions = Collections.unmodifiableMap(new HashMap<>(extensions));
   }
 
   public Problem(

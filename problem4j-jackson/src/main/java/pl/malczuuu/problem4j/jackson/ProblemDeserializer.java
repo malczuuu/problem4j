@@ -14,8 +14,6 @@ import pl.malczuuu.problem4j.core.ProblemBuilder;
 
 final class ProblemDeserializer extends StdDeserializer<Problem> {
 
-  private final ObjectMapper mapper = new ObjectMapper();
-
   ProblemDeserializer() {
     super(Problem.class);
   }
@@ -46,7 +44,10 @@ final class ProblemDeserializer extends StdDeserializer<Problem> {
           builder.instance(URI.create(node.get("instance").textValue()));
           break;
         default:
-          builder.extension(field, mapper.treeToValue(node.get(field), Object.class));
+          if (jp.getCodec() instanceof ObjectMapper) {
+            ObjectMapper mapper = (ObjectMapper) jp.getCodec();
+            builder.extension(field, mapper.treeToValue(node.get(field), Object.class));
+          }
           break;
       }
     }

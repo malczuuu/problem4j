@@ -1,9 +1,7 @@
 package pl.malczuuu.problem4j.spring;
 
 import java.io.Serializable;
-import javax.annotation.concurrent.Immutable;
 
-@Immutable
 public final class ValidationError implements Serializable {
 
   private static final long serialVersionUID = 1L;

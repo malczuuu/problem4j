@@ -1,9 +1,19 @@
-dependencies {
-    compileOnly "org.springframework:spring-webmvc:5.1.0.RELEASE"
-    compileOnly "org.springframework.boot:spring-boot-autoconfigure:2.0.5.RELEASE"
-    compileOnly "javax.servlet:javax.servlet-api:4.0.1"
+apply plugin: "java-library"
+apply plugin: "maven"
 
-    api project(":problem4j-core")
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    api("org.slf4j:slf4j-api:1.7.25")
+    compileOnly("org.springframework:spring-webmvc:5.1.0.RELEASE")
+    compileOnly("org.springframework.boot:spring-boot-autoconfigure:2.0.0.RELEASE")
+    compileOnly("javax.servlet:javax.servlet-api:3.1.0")
+
     api project(":problem4j-jackson")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
@@ -12,4 +22,20 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = "sources"
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = "javadoc"
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
 }

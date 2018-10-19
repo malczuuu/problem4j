@@ -1,29 +1,10 @@
-subprojects {
-    apply plugin: "java-library"
-    apply plugin: "maven"
+plugins {
+    id "net.nemerosa.versioning" version "2.8.2" apply false
+}
 
-    repositories {
-        mavenCentral()
-    }
+subprojects {
+    apply plugin: "net.nemerosa.versioning"
 
     group = "pl.malczuuu.problem4j"
-    version = "0.1.0-SNAPSHOT"
-    version = "0.1.0-SNAPSHOT"
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-
-    task sourcesJar(type: Jar, dependsOn: classes) {
-        classifier = "sources"
-        from sourceSets.main.allSource
-    }
-
-    task javadocJar(type: Jar, dependsOn: javadoc) {
-        classifier = "javadoc"
-        from javadoc.destinationDir
-    }
-
-    artifacts {
-        archives sourcesJar
-        archives javadocJar
-    }
+    version = versioning.info.tag ?: versioning.info.commit.substring(0, 10) + (versioning.info.dirty ? "-dirty" : "")
 }
