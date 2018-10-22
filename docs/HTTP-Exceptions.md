@@ -1,6 +1,6 @@
 # HTTP Exceptions
 
-HTTP exceptions are located in `pl.malczuuu.problem4j.core` package.
+HTTP exceptions are located in `io.github.malczuuu.problem4j.core` package.
 
 | Code  | Reason phrase                        | Exception class                            |
 |-------|--------------------------------------|--------------------------------------------|

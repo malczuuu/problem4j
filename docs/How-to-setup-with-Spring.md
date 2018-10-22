@@ -2,7 +2,7 @@
 
 1.  Include dependencies.
 
-    Add [JitPack](https://jitpack.io/) repository.
+    Add [JitPack](https://jitpack.io/) dependency repository.
 
     ```groovy
     repositories {
@@ -14,7 +14,7 @@
 
     ```groovy
     dependencies {
-        implementation "com.github.malczuuu.problem4j:problem4j-spring:{version}"
+        implementation "io.github.malczuuu.problem4j:problem4j-spring:{10-digits-of-commit-hash}"
     }
     ```
 
@@ -24,7 +24,7 @@
 
     ```java
     import org.springframework.context.annotation.Configuration;
-    import EnableProblem;
+    import io.github.malczuuu.problem4j.spring.EnableProblem;
     
     @Configuration
     @EnableProblem
