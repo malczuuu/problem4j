@@ -1,5 +1,8 @@
 package io.github.malczuuu.problem4j.spring.web;
 
+import io.github.malczuuu.problem4j.core.Problem;
+import io.github.malczuuu.problem4j.core.ProblemBuilder;
+import io.github.malczuuu.problem4j.core.ProblemException;
 import java.time.Instant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,10 +29,6 @@ import org.springframework.web.context.request.async.AsyncRequestTimeoutExceptio
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import io.github.malczuuu.problem4j.core.Problem;
-import io.github.malczuuu.problem4j.core.ProblemBuilder;
-import io.github.malczuuu.problem4j.core.ProblemException;
-import io.github.malczuuu.problem4j.core.UnauthorizedException;
 
 @SuppressWarnings("NullableProblems")
 @RestControllerAdvice
@@ -51,7 +50,8 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
   public ResponseEntity<Object> handleProblemException(ProblemException ex, WebRequest request) {
     Problem problem = problemSupplier.from(ex).build();
     HttpHeaders headers = new HttpHeaders();
-    if (ex instanceof UnauthorizedException && properties.isShowLoginFormOnUnauthorized()) {
+    if (ex.getProblem().getStatus() == HttpStatus.UNAUTHORIZED.value()
+        && properties.isShowLoginFormOnUnauthorized()) {
       headers.set("WWW-Authenticate", "Basic realm=\"Basic\", charset=\"UTF-8\"");
     }
     HttpStatus status = HttpStatus.valueOf(problem.getStatus());
@@ -224,13 +224,18 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
       if (properties.isLogExceptions()) {
         log.warn(
             "Exception {} with message='{}' occurred, details={}",
-            ex.getClass().getSimpleName(), ex.getMessage(), body, ex);
+            ex.getClass().getSimpleName(),
+            ex.getMessage(),
+            body,
+            ex);
       }
     } else {
       if (properties.isLogExceptions()) {
         log.warn(
             "Exception {} with message='{}' occurred",
-            ex.getClass().getSimpleName(), ex.getMessage(), ex);
+            ex.getClass().getSimpleName(),
+            ex.getMessage(),
+            ex);
       }
     }
     return super.handleExceptionInternal(ex, body, headers, status, request);

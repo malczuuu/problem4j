@@ -8,7 +8,7 @@ final class ProblemBuilderImpl implements ProblemBuilder {
 
   private URI type = Problem.BLANK_TYPE;
   private String title;
-  private int status;
+  private int status = 0;
   private String detail;
   private URI instance;
   private Map<String, Object> extensions = new LinkedHashMap<>();
