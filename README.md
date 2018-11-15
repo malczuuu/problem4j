@@ -21,8 +21,8 @@ Simple Java library implementing [RFC7807](https://tools.ietf.org/html/rfc7807).
 
     ```groovy
     dependencies {
-        implementation "io.github.malczuuu.problem4j:problem4j-core:{10-digits-of-commit-hash}"
-        implementation "io.github.malczuuu.problem4j:problem4j-jackson:{10-digits-of-commit-hash}"
+        implementation "io.github.malczuuu.problem4j:problem4j-core:1.0.1"
+        implementation "io.github.malczuuu.problem4j:problem4j-jackson:1.0.1"
     }
     ```
 
@@ -36,7 +36,7 @@ Simple Java library implementing [RFC7807](https://tools.ietf.org/html/rfc7807).
 
     ```groovy
     dependencies {
-        implementation "io.github.malczuuu.problem4j:problem4j-spring:{10-digits-of-commit-hash}"
+        implementation "io.github.malczuuu.problem4j:problem4j-spring:1.0.1"
     }
     ```
 
