@@ -1,6 +1,8 @@
 package io.github.malczuuu.problem4j.spring.web;
 
-import java.net.URI;
+import io.github.malczuuu.problem4j.core.Problem;
+import io.github.malczuuu.problem4j.core.ProblemBuilder;
+import io.github.malczuuu.problem4j.core.ProblemException;
 import java.util.ArrayList;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
@@ -18,9 +20,6 @@ import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
-import io.github.malczuuu.problem4j.core.Problem;
-import io.github.malczuuu.problem4j.core.ProblemBuilder;
-import io.github.malczuuu.problem4j.core.ProblemException;
 
 public abstract class AbstractProblemSupplier implements ProblemSupplier {
 
@@ -178,8 +177,7 @@ public abstract class AbstractProblemSupplier implements ProblemSupplier {
         .type(Problem.BLANK_TYPE)
         .title("Not found")
         .status(404)
-        .detail("Handler not found")
-        .instance(URI.create(ex.getRequestURL()));
+        .detail("Handler not found");
   }
 
   @Override
