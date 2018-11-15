@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.malczuuu.problem4j.core.Problem;
 import java.io.IOException;
 import java.net.URI;
 import java.time.Instant;
@@ -11,7 +12,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import io.github.malczuuu.problem4j.core.Problem;
 
 class ProblemSerializerTests {
 
