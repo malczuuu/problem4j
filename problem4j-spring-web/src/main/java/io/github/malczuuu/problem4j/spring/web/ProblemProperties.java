@@ -5,22 +5,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "problem", ignoreInvalidFields = true)
 public class ProblemProperties {
 
-  private boolean showLoginFormOnUnauthorized = true;
-  private boolean logExceptions = true;
+  private String wwwAuthenticate;
 
-  public boolean isShowLoginFormOnUnauthorized() {
-    return showLoginFormOnUnauthorized;
+  public String getWwwAuthenticate() {
+    return wwwAuthenticate;
   }
 
-  public boolean isLogExceptions() {
-    return logExceptions;
-  }
-
-  public void setShowLoginFormOnUnauthorized(boolean showLoginFormOnUnauthorized) {
-    this.showLoginFormOnUnauthorized = showLoginFormOnUnauthorized;
-  }
-
-  public void setLogExceptions(boolean logExceptions) {
-    this.logExceptions = logExceptions;
+  public void setWwwAuthenticate(String wwwAuthenticate) {
+    this.wwwAuthenticate = wwwAuthenticate;
   }
 }

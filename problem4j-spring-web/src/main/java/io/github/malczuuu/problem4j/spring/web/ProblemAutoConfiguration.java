@@ -15,12 +15,6 @@ public class ProblemAutoConfiguration {
 
   @ConditionalOnMissingBean
   @Bean
-  public ProblemSupplier problemSupplier() {
-    return new DefaultProblemSupplier();
-  }
-
-  @ConditionalOnMissingBean
-  @Bean
   public Module problemModule() {
     return new ProblemModule();
   }

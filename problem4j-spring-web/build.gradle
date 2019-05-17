@@ -9,7 +9,6 @@ repositories {
 }
 
 dependencies {
-    api("org.slf4j:slf4j-api:1.7.25")
     compileOnly("org.springframework:spring-webmvc:5.1.0.RELEASE")
     compileOnly("org.springframework.boot:spring-boot-autoconfigure:2.0.0.RELEASE")
     compileOnly("org.springframework.boot:spring-boot-configuration-processor:2.0.0.RELEASE")
@@ -18,8 +17,13 @@ dependencies {
 
     api project(":problem4j-jackson")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.1")
+    testRuntimeOnly("javax.servlet:javax.servlet-api:3.1.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.2")
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test:2.0.0.RELEASE") {
+        exclude group: "junit", module: "junit"
+    }
 }
 
 compileJava.dependsOn(processResources)
