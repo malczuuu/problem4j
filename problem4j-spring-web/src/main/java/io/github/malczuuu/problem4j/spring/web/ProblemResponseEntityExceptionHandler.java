@@ -313,6 +313,9 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
     if (body instanceof Problem) {
       headers.setContentType(MediaType.APPLICATION_PROBLEM_JSON);
     }
+    if (status == HttpStatus.UNAUTHORIZED && problemProperties.getWwwAuthenticate() != null) {
+      headers.add("WWW-Authenticate", problemProperties.getWwwAuthenticate());
+    }
     return super.handleExceptionInternal(ex, body, headers, status, request);
   }
 }
