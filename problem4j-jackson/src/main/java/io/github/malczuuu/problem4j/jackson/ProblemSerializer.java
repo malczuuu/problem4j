@@ -19,7 +19,7 @@ final class ProblemSerializer extends StdSerializer<Problem> {
     if (value.getType() != null) {
       gen.writeStringField("type", value.getType().toString());
     } else {
-      gen.writeStringField("type", "about:blank");
+      gen.writeStringField("type", Problem.BLANK_TYPE.toString());
     }
     if (value.getTitle() != null) {
       gen.writeStringField("title", value.getTitle());
