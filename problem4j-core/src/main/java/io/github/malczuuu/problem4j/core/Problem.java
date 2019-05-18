@@ -1,5 +1,7 @@
 package io.github.malczuuu.problem4j.core;
 
+import static jdk.nashorn.internal.runtime.JSONFunctions.quote;
+
 import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
@@ -116,14 +118,14 @@ public class Problem implements Serializable {
   public String toString() {
     List<String> lines = new ArrayList<>(4);
     if (type != null) {
-      lines.add("\"type\": \"" + type + "\"");
+      lines.add("\"type\": \"" + quote(type.toString()) + "\"");
     }
     if (title != null) {
-      lines.add("title: \"" + title + "\"");
+      lines.add("\"title\": \"" + quote(title) + "\"");
     }
     lines.add("\"status\": " + status);
     if (detail != null) {
-      lines.add("\"detail\": \"" + detail + "\"");
+      lines.add("\"detail\": \"" + quote(detail) + "\"");
     }
     return lines.stream().collect(Collectors.joining(", ", "{ ", " }"));
   }
@@ -160,9 +162,9 @@ public class Problem implements Serializable {
       if (value instanceof Number || value instanceof Boolean) {
         valueLine = "\"value\": " + value;
       } else {
-        valueLine = "\"value\": " + "\"" + value + "\"";
+        valueLine = "\"value\": " + "\"" + quote(value.toString()) + "\"";
       }
-      return "{ \"key\": \"" + key + "\", " + valueLine + " }";
+      return "{ \"key\": \"" + quote(key) + "\", " + valueLine + " }";
     }
   }
 }
