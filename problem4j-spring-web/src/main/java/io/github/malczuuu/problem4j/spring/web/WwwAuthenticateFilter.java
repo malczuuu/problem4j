@@ -7,11 +7,11 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
-@WebFilter
+@Component
 public class WwwAuthenticateFilter implements Filter {
 
   private final ProblemProperties problemProperties;
