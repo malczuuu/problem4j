@@ -47,7 +47,6 @@ final class ProblemBuilderImpl implements ProblemBuilder {
 
   @Override
   public ProblemBuilder extension(String name, Object value) {
-    extensions.remove(name);
     extensions.put(name, value);
     return this;
   }

@@ -1,6 +1,7 @@
 package io.github.malczuuu.problem4j.jackson;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,13 +41,28 @@ class ProblemSerializerTests {
   }
 
   @Test
-  void testProblemSerializerOK() throws JsonProcessingException {
+  void shouldSerializeProblem() throws JsonProcessingException {
     String problemJson = mapper.writeValueAsString(problem);
+
     assertEquals(json, problemJson);
   }
 
   @Test
-  void testDeserialize() throws IOException {
-    Problem deserialized = mapper.readValue(json, Problem.class);
+  void shouldDeserializeProblem() throws IOException {
+    Problem problem = mapper.readValue(json, Problem.class);
+
+    assertEquals(URI.create("http://localhost/FATAL"), problem.getType());
+    assertEquals("problem", problem.getTitle());
+    assertEquals(400, problem.getStatus());
+    assertEquals("A serious problem", problem.getDetail());
+    assertEquals(URI.create("http://localhost/endpoint/12"), problem.getInstance());
+
+    assertEquals(2, problem.getExtensions().size());
+
+    assertTrue(problem.hasExtension("userid"));
+    assertTrue(problem.hasExtension("timestamp"));
+
+    assertEquals(100, problem.getExtensionValue("userid"));
+    assertEquals("2018-10-01T10:43:21.221Z", problem.getExtensionValue("timestamp"));
   }
 }

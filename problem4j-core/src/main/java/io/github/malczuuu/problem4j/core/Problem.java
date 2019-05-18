@@ -2,10 +2,13 @@ package io.github.malczuuu.problem4j.core;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Problem implements Serializable {
 
@@ -111,20 +114,18 @@ public class Problem implements Serializable {
 
   @Override
   public String toString() {
-    return "("
-        + "type=" + type + ", "
-        + "title='" + title + "', "
-        + "status=" + status + ", "
-        + "detail='" + detail + "'"
-        + (instance != null ? ", instance=" + instance : "")
-        + extensions
-            .entrySet()
-            .stream()
-            .map(e -> e.getKey() + "=" + e.getValue())
-            .reduce((s1, s2) -> s1 + "," + s2)
-            .map(s -> ", " + s)
-            .orElse("")
-        + ")";
+    List<String> lines = new ArrayList<>(4);
+    if (type != null) {
+      lines.add("\"type\": \"" + type + "\"");
+    }
+    if (title != null) {
+      lines.add("title: \"" + title + "\"");
+    }
+    lines.add("\"status\": " + status);
+    if (detail != null) {
+      lines.add("\"detail\": \"" + detail + "\"");
+    }
+    return lines.stream().collect(Collectors.joining(", ", "{ ", " }"));
   }
 
   public static final class Extension implements Map.Entry<String, Object> {
@@ -151,6 +152,17 @@ public class Problem implements Serializable {
     public Object setValue(Object value) {
       this.value = value;
       return value;
+    }
+
+    @Override
+    public String toString() {
+      String valueLine;
+      if (value instanceof Number || value instanceof Boolean) {
+        valueLine = "\"value\": " + value;
+      } else {
+        valueLine = "\"value\": " + "\"" + value + "\"";
+      }
+      return "{ \"key\": \"" + key + "\", " + valueLine + " }";
     }
   }
 }
