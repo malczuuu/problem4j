@@ -5,6 +5,8 @@ import io.github.malczuuu.problem4j.core.ProblemBuilder;
 import io.github.malczuuu.problem4j.core.ProblemException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
@@ -313,8 +315,19 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
     if (body instanceof Problem) {
       headers.setContentType(MediaType.APPLICATION_PROBLEM_JSON);
     }
-    if (status == HttpStatus.UNAUTHORIZED && problemProperties.getWwwAuthenticate() != null) {
-      headers.add("WWW-Authenticate", problemProperties.getWwwAuthenticate());
+    if (status == HttpStatus.UNAUTHORIZED && problemProperties.getWwwAuthenticateRealm() != null) {
+      String[] auth = request.getHeaderValues("Authorization");
+      Pattern pattern = Pattern.compile("^(.*) .*$");
+      if (auth != null && auth.length > 0) {
+        Matcher matcher = pattern.matcher(auth[0]);
+        if (matcher.find()) {
+          String realm = problemProperties.getWwwAuthenticateRealm();
+          if (realm.matches("\\s")) {
+            realm = "\"" + realm + "\"";
+          }
+          headers.add("WWW-Authenticate", matcher.find(1) + " realm=" + realm);
+        }
+      }
     }
     return super.handleExceptionInternal(ex, body, headers, status, request);
   }
