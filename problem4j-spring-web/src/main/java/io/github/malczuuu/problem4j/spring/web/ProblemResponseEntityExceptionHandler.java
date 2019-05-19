@@ -8,6 +8,9 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
@@ -28,6 +31,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
@@ -36,6 +40,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @RestControllerAdvice
 public class ProblemResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+
+  private static final Logger log =
+      LoggerFactory.getLogger(ProblemResponseEntityExceptionHandler.class);
 
   private final ProblemProperties problemProperties;
 
@@ -331,6 +338,52 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
         headers.add("WWW-Authenticate", "Basic realm=" + realm);
       }
     }
+    log(request, ex);
     return super.handleExceptionInternal(ex, body, headers, status, request);
+  }
+
+  private void log(WebRequest request, Exception ex) {
+    if (request instanceof ServletWebRequest) {
+      log((ServletWebRequest) request, ex);
+    } else {
+      if (log.isDebugEnabled()) {
+        log.debug(
+            "Unhandled exception {} : {}", ex.getClass().getSimpleName(), ex.getMessage(), ex);
+      } else {
+        log.info(
+            "Unhandled exception {} : {}", ex.getClass().getSimpleName(), ex.getMessage());
+      }
+    }
+  }
+
+  private void log(ServletWebRequest request, Exception ex) {
+    log(request.getRequest(), ex);
+  }
+
+  private void log(HttpServletRequest request, Exception ex) {
+    if (log.isDebugEnabled()) {
+      log.debug(
+          "Unhandled exception {} : {} on {} {}",
+          ex.getClass().getSimpleName(),
+          ex.getMessage(),
+          request.getMethod(),
+          path(request),
+          ex);
+    } else {
+      log.info(
+          "Unhandled exception {} : {} on {} {}",
+          ex.getClass().getSimpleName(),
+          ex.getMessage(),
+          request.getMethod(),
+          path(request));
+    }
+  }
+
+  private String path(HttpServletRequest req) {
+    String result = req.getServletPath();
+    if (req.getQueryString() != null && !req.getQueryString().isEmpty()) {
+      result += "?" + req.getQueryString();
+    }
+    return result;
   }
 }
