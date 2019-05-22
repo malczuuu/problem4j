@@ -1,5 +1,10 @@
 package io.github.malczuuu.problem4j.spring.web;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy.KebabCaseStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy.LowerCaseStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy.SnakeCaseStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy.UpperCamelCaseStrategy;
 import io.github.malczuuu.problem4j.core.Problem;
 import io.github.malczuuu.problem4j.core.ProblemBuilder;
 import io.github.malczuuu.problem4j.core.ProblemException;
@@ -13,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.boot.autoconfigure.jackson.JacksonProperties;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -45,9 +51,12 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
       LoggerFactory.getLogger(ProblemResponseEntityExceptionHandler.class);
 
   private final ProblemProperties problemProperties;
+  private final JacksonProperties jacksonProperties;
 
-  public ProblemResponseEntityExceptionHandler(ProblemProperties problemProperties) {
+  public ProblemResponseEntityExceptionHandler(
+      ProblemProperties problemProperties, JacksonProperties jacksonProperties) {
     this.problemProperties = problemProperties;
+    this.jacksonProperties = jacksonProperties;
   }
 
   @ExceptionHandler({ProblemException.class})
@@ -267,7 +276,7 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
   @Override
   protected ResponseEntity<Object> handleBindException(
       BindException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-    status = HttpStatus.UNPROCESSABLE_ENTITY;
+    status = HttpStatus.BAD_REQUEST;
     Problem problem =
         from(ex.getBindingResult()).title(status.getReasonPhrase()).status(status.value()).build();
     return handleExceptionInternal(ex, problem, headers, status, request);
@@ -280,7 +289,7 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
         .getFieldErrors()
         .forEach(
             f -> {
-              details.add(new ValidationError(f.getField(), f.getDefaultMessage()));
+              details.add(new ValidationError(fieldName(f.getField()), f.getDefaultMessage()));
               fields.add(f.getField());
             });
     return Problem.builder()
@@ -288,6 +297,22 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
             "Validation failed for fields "
                 + fields.stream().reduce((s1, s2) -> s1 + ", " + s2).orElse(""))
         .extension("errors", details);
+  }
+
+  private String fieldName(String field) {
+    switch (jacksonProperties.getPropertyNamingStrategy()) {
+      case "SNAKE_CASE":
+        return ((SnakeCaseStrategy) PropertyNamingStrategy.SNAKE_CASE).translate(field);
+      case "UPPER_CAMEL_CASE":
+        return ((UpperCamelCaseStrategy) PropertyNamingStrategy.UPPER_CAMEL_CASE).translate(field);
+      case "KEBAB_CASE":
+        return ((KebabCaseStrategy) PropertyNamingStrategy.KEBAB_CASE).translate(field);
+      case "LOWER_CASE":
+        return ((LowerCaseStrategy) PropertyNamingStrategy.LOWER_CASE).translate(field);
+      case "LOWER_CAMEL_CASE":
+      default:
+        return field;
+    }
   }
 
   @Override
@@ -350,8 +375,7 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
         log.debug(
             "Unhandled exception {} : {}", ex.getClass().getSimpleName(), ex.getMessage(), ex);
       } else {
-        log.info(
-            "Unhandled exception {} : {}", ex.getClass().getSimpleName(), ex.getMessage());
+        log.info("Unhandled exception {} : {}", ex.getClass().getSimpleName(), ex.getMessage());
       }
     }
   }
