@@ -10,8 +10,6 @@ import io.github.malczuuu.problem4j.core.ProblemBuilder;
 import io.github.malczuuu.problem4j.core.ProblemException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -50,12 +48,9 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
   private static final Logger log =
       LoggerFactory.getLogger(ProblemResponseEntityExceptionHandler.class);
 
-  private final ProblemProperties problemProperties;
   private final JacksonProperties jacksonProperties;
 
-  public ProblemResponseEntityExceptionHandler(
-      ProblemProperties problemProperties, JacksonProperties jacksonProperties) {
-    this.problemProperties = problemProperties;
+  public ProblemResponseEntityExceptionHandler(JacksonProperties jacksonProperties) {
     this.jacksonProperties = jacksonProperties;
   }
 
@@ -346,22 +341,6 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
       Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
     if (body instanceof Problem) {
       headers.setContentType(MediaType.APPLICATION_PROBLEM_JSON);
-    }
-    if (status == HttpStatus.UNAUTHORIZED && problemProperties.getWwwAuthenticateRealm() != null) {
-      String realm = problemProperties.getWwwAuthenticateRealm();
-      if (realm.matches("\\s")) {
-        realm = "\"" + realm + "\"";
-      }
-      String[] auth = request.getHeaderValues("Authorization");
-      Pattern pattern = Pattern.compile("^(.*) .*$");
-      if (auth != null && auth.length > 0) {
-        Matcher matcher = pattern.matcher(auth[0]);
-        if (matcher.find()) {
-          headers.add("WWW-Authenticate", matcher.find(1) + " realm=" + realm);
-        }
-      } else {
-        headers.add("WWW-Authenticate", "Basic realm=" + realm);
-      }
     }
     log(request, ex);
     return super.handleExceptionInternal(ex, body, headers, status, request);
