@@ -85,7 +85,7 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
         Problem.builder()
             .title(status.getReasonPhrase())
             .status(status.value())
-            .detail("Method " + ex.getMethod() + " is not supported");
+            .detail("Method " + ex.getMethod() + " not supported");
     if (ex.getSupportedMethods() != null) {
       builder.extension("supported", Arrays.asList(ex.getSupportedMethods()));
     }
@@ -104,7 +104,7 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
         Problem.builder()
             .title(status.getReasonPhrase())
             .status(status.value())
-            .detail("Media type " + ex.getContentType() + " is not supported")
+            .detail("Media type " + ex.getContentType() + " not supported")
             .extension("supported", new ArrayList<>(ex.getSupportedMediaTypes()))
             .build();
     return handleExceptionInternal(ex, problem, headers, status, request);
@@ -126,7 +126,7 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
                     + headers.getAccept().stream()
                         .map(MimeType::toString)
                         .collect(Collectors.joining(", "))
-                    + " is not supported")
+                    + " not supported")
             .extension("supported", new ArrayList<>(ex.getSupportedMediaTypes()))
             .build();
     return handleExceptionInternal(ex, problem, headers, status, request);
@@ -204,7 +204,7 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
         Problem.builder()
             .title(status.getReasonPhrase())
             .status(status.value())
-            .detail("Mismatched type of " + ex.getPropertyName() + " property")
+            .detail("Type mismatch of " + ex.getPropertyName() + " property")
             .extension("type", ex.getRequiredType())
             .build();
     return handleExceptionInternal(ex, problem, headers, status, request);
@@ -221,7 +221,7 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
         Problem.builder()
             .title(status.getReasonPhrase())
             .status(status.value())
-            .detail("Unable to read request")
+            .detail("Message not readable")
             .build();
     return handleExceptionInternal(ex, problem, headers, status, request);
   }
@@ -279,19 +279,11 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
 
   private ProblemBuilder from(BindingResult bindingResult) {
     ArrayList<ValidationError> details = new ArrayList<>();
-    ArrayList<String> fields = new ArrayList<>();
     bindingResult
         .getFieldErrors()
         .forEach(
-            f -> {
-              details.add(new ValidationError(fieldName(f.getField()), f.getDefaultMessage()));
-              fields.add(f.getField());
-            });
-    return Problem.builder()
-        .detail(
-            "Validation failed for fields "
-                + fields.stream().reduce((s1, s2) -> s1 + ", " + s2).orElse(""))
-        .extension("errors", details);
+            f -> details.add(new ValidationError(fieldName(f.getField()), f.getDefaultMessage())));
+    return Problem.builder().detail("Validation failed").extension("errors", details);
   }
 
   private String fieldName(String field) {
