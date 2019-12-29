@@ -1,7 +1,6 @@
 package io.github.malczuuu.problem4j.jackson;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,7 +19,7 @@ final class ProblemDeserializer extends StdDeserializer<Problem> {
 
   @Override
   public Problem deserialize(JsonParser jp, DeserializationContext ctxt)
-      throws IOException, JsonProcessingException {
+      throws IOException {
     JsonNode node = jp.getCodec().readTree(jp);
     ProblemBuilder builder = Problem.builder();
 
