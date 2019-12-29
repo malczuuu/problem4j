@@ -1,7 +1,5 @@
 package io.github.malczuuu.problem4j.core;
 
-import static jdk.nashorn.internal.runtime.JSONFunctions.quote;
-
 import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
@@ -128,6 +126,10 @@ public class Problem implements Serializable {
       lines.add("\"detail\": \"" + quote(detail) + "\"");
     }
     return lines.stream().collect(Collectors.joining(", ", "{ ", " }"));
+  }
+
+  public static String quote(String string) {
+    return JsonEscape.escape(string);
   }
 
   public static final class Extension implements Map.Entry<String, Object> {
