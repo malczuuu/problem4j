@@ -1,6 +1,5 @@
 plugins {
-    // net.nemerosa.versioning plugin in version 2.8.2 seems to be broken
-    id "net.nemerosa.versioning" version "2.7.1"
+    id "net.nemerosa.versioning" version "2.8.2"
 }
 
 subprojects {
