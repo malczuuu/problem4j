@@ -1,6 +1,5 @@
 package io.github.malczuuu.problem4j.spring.web;
 
-import com.fasterxml.jackson.databind.Module;
 import io.github.malczuuu.problem4j.jackson.ProblemModule;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +12,7 @@ public class ProblemAutoConfiguration {
 
   @ConditionalOnMissingBean
   @Bean
-  public Module problemModule() {
+  public ProblemModule problemModule() {
     return new ProblemModule();
   }
 }
