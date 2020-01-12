@@ -11,16 +11,16 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Iterator;
 
-final class ProblemDeserializer extends StdDeserializer<Problem> {
+class ProblemDeserializer extends StdDeserializer<Problem> {
 
   ProblemDeserializer() {
     super(Problem.class);
   }
 
   @Override
-  public Problem deserialize(JsonParser jp, DeserializationContext ctxt)
+  public Problem deserialize(JsonParser jsonParser, DeserializationContext context)
       throws IOException {
-    JsonNode node = jp.getCodec().readTree(jp);
+    JsonNode node = jsonParser.getCodec().readTree(jsonParser);
     ProblemBuilder builder = Problem.builder();
 
     Iterator<String> fieldNames = node.fieldNames();
@@ -43,8 +43,8 @@ final class ProblemDeserializer extends StdDeserializer<Problem> {
           builder.instance(URI.create(node.get("instance").textValue()));
           break;
         default:
-          if (jp.getCodec() instanceof ObjectMapper) {
-            ObjectMapper mapper = (ObjectMapper) jp.getCodec();
+          if (jsonParser.getCodec() instanceof ObjectMapper) {
+            ObjectMapper mapper = (ObjectMapper) jsonParser.getCodec();
             builder.extension(field, mapper.treeToValue(node.get(field), Object.class));
           }
           break;

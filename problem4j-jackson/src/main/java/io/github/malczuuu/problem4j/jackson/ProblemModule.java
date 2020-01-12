@@ -9,9 +9,10 @@ import java.util.Collections;
 public class ProblemModule extends SimpleModule {
 
   public ProblemModule() {
-    super("ProblemModule");
-    _serializers = new SimpleSerializers(Collections.singletonList(new ProblemSerializer()));
-    _deserializers =
-        new SimpleDeserializers(Collections.singletonMap(Problem.class, new ProblemDeserializer()));
+    super(ProblemModule.class.getSimpleName());
+    setSerializers(new SimpleSerializers(Collections.singletonList(new ProblemSerializer())));
+    setDeserializers(
+        new SimpleDeserializers(
+            Collections.singletonMap(Problem.class, new ProblemDeserializer())));
   }
 }
