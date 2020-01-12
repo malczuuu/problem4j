@@ -4,22 +4,22 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 
-public final class ValidationError implements Serializable {
+public class Violation implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  private final String path;
+  private final String field;
   private final String error;
 
   @JsonCreator
-  public ValidationError(@JsonProperty("path") String path, @JsonProperty("error") String error) {
-    this.path = path;
+  public Violation(@JsonProperty("field") String field, @JsonProperty("error") String error) {
+    this.field = field;
     this.error = error;
   }
 
-  @JsonProperty("path")
-  public String getPath() {
-    return path;
+  @JsonProperty("field")
+  public String getField() {
+    return field;
   }
 
   @JsonProperty("error")

@@ -126,7 +126,7 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
                     + headers.getAccept().stream()
                         .map(MimeType::toString)
                         .collect(Collectors.joining(", "))
-                    + " not supported")
+                    + " not acceptable")
             .extension("supported", new ArrayList<>(ex.getSupportedMediaTypes()))
             .build();
     return handleExceptionInternal(ex, problem, headers, status, request);
@@ -278,11 +278,10 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
   }
 
   private ProblemBuilder from(BindingResult bindingResult) {
-    ArrayList<ValidationError> details = new ArrayList<>();
+    ArrayList<Violation> details = new ArrayList<>();
     bindingResult
         .getFieldErrors()
-        .forEach(
-            f -> details.add(new ValidationError(fieldName(f.getField()), f.getDefaultMessage())));
+        .forEach(f -> details.add(new Violation(fieldName(f.getField()), f.getDefaultMessage())));
     return Problem.builder().detail("Validation failed").extension("errors", details);
   }
 

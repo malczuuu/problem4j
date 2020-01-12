@@ -6,36 +6,36 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import io.github.malczuuu.problem4j.core.Problem;
 import java.io.IOException;
 
-final class ProblemSerializer extends StdSerializer<Problem> {
+class ProblemSerializer extends StdSerializer<Problem> {
 
   ProblemSerializer() {
     super(Problem.class);
   }
 
   @Override
-  public void serialize(Problem value, JsonGenerator gen, SerializerProvider provider)
+  public void serialize(Problem problem, JsonGenerator jsonGenerator, SerializerProvider provider)
       throws IOException {
-    gen.writeStartObject();
-    if (value.getType() != null) {
-      gen.writeStringField("type", value.getType().toString());
+    jsonGenerator.writeStartObject();
+    if (problem.getType() != null) {
+      jsonGenerator.writeStringField("type", problem.getType().toString());
     } else {
-      gen.writeStringField("type", Problem.BLANK_TYPE.toString());
+      jsonGenerator.writeStringField("type", Problem.BLANK_TYPE.toString());
     }
-    if (value.getTitle() != null) {
-      gen.writeStringField("title", value.getTitle());
+    if (problem.getTitle() != null) {
+      jsonGenerator.writeStringField("title", problem.getTitle());
     }
-    gen.writeNumberField("status", value.getStatus());
-    if (value.getDetail() != null) {
-      gen.writeStringField("detail", value.getDetail());
+    jsonGenerator.writeNumberField("status", problem.getStatus());
+    if (problem.getDetail() != null) {
+      jsonGenerator.writeStringField("detail", problem.getDetail());
     }
-    if (value.getInstance() != null) {
-      gen.writeStringField("instance", value.getInstance().toString());
+    if (problem.getInstance() != null) {
+      jsonGenerator.writeStringField("instance", problem.getInstance().toString());
     }
-    for (String k : value.getExtensions()) {
-      if (k != null && value.getExtensionValue(k) != null) {
-        gen.writeObjectField(k, value.getExtensionValue(k));
+    for (String k : problem.getExtensions()) {
+      if (k != null && problem.getExtensionValue(k) != null) {
+        jsonGenerator.writeObjectField(k, problem.getExtensionValue(k));
       }
     }
-    gen.writeEndObject();
+    jsonGenerator.writeEndObject();
   }
 }
