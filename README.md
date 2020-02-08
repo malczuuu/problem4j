@@ -21,12 +21,16 @@ Simple Java library implementing [RFC7807](https://tools.ietf.org/html/rfc7807).
 
     ```groovy
     dependencies {
-        implementation "io.github.malczuuu.problem4j:problem4j-core:1.0.1"
-        implementation "io.github.malczuuu.problem4j:problem4j-jackson:1.0.1"
+        implementation "io.github.malczuuu.problem4j:problem4j-core:2.0.0"
+    
+        // Optionally
+        implementation "io.github.malczuuu.problem4j:problem4j-jackson:2.0.0"
     }
     ```
 
-    Feel free to use any class from `io.github.malczuuu.problem4j.core` and `io.github.malczuuu.problem4j.jackson` packages. For integration with Spring Framework check [this instruction](How-to-setup-with-Spring.md).
+    Feel free to use any class from `io.github.malczuuu.problem4j.core` (and 
+    `io.github.malczuuu.problem4j.jackson`) packages. For integration with Spring Framework check 
+    [this instruction](#how-to-setup-with-spring).
 
 ## How to setup with Spring
 
@@ -36,11 +40,9 @@ Simple Java library implementing [RFC7807](https://tools.ietf.org/html/rfc7807).
 
     ```groovy
     dependencies {
-        implementation "io.github.malczuuu.problem4j:problem4j-spring:1.0.1"
+        implementation "io.github.malczuuu.problem4j:problem4j-spring-web:2.0.0"
     }
     ```
-
-    This package depends on `problem4j-core` and `problem4j-jackson` in appropriate versions, so no need to include them implicitly.
 
 2.  Create configuration.
 
@@ -53,7 +55,3 @@ Simple Java library implementing [RFC7807](https://tools.ietf.org/html/rfc7807).
     public class ProblemConfiguration {
     }
     ```
-
-    You can change default responses on predefined exception by declaring custom bean of type `ProblemSupplier`.
-
-3.  Throw `ProblemException` or it's subclasses from anywhere in your REST methods. All errors will be automatically handled and status will be returned to user.
