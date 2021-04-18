@@ -52,6 +52,6 @@ final class ProblemBuilderImpl implements ProblemBuilder {
   }
 
   public Problem build() {
-    return new Problem(type, title, status, detail, instance, extensions);
+    return new DefaultProblem(type, title, status, detail, instance, extensions);
   }
 }
