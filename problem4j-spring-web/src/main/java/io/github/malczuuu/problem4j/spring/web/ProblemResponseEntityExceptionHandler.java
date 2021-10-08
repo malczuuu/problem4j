@@ -279,6 +279,9 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
   }
 
   private String fieldName(String field) {
+    if (jacksonProperties.getPropertyNamingStrategy() == null) {
+      return field;
+    }
     switch (jacksonProperties.getPropertyNamingStrategy()) {
       case "SNAKE_CASE":
         return ((SnakeCaseStrategy) PropertyNamingStrategy.SNAKE_CASE).translate(field);
