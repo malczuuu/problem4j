@@ -66,11 +66,7 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
   public ResponseEntity<Object> handleOtherException(Exception ex, WebRequest request) {
     HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
     Problem problem =
-        Problem.builder()
-            .type(Problem.BLANK_TYPE)
-            .title(status.getReasonPhrase())
-            .status(status.value())
-            .build();
+        Problem.builder().title(status.getReasonPhrase()).status(status.value()).build();
     return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
   }
 
@@ -259,7 +255,6 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
     status = HttpStatus.BAD_REQUEST;
     Problem problem =
         Problem.builder()
-            .type(Problem.BLANK_TYPE)
             .title(status.getReasonPhrase())
             .status(status.value())
             .detail("Missing " + ex.getRequestPartName() + " request part")
@@ -306,11 +301,7 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
       NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
     status = HttpStatus.NOT_FOUND;
     Problem problem =
-        Problem.builder()
-            .type(Problem.BLANK_TYPE)
-            .title(status.getReasonPhrase())
-            .status(status.value())
-            .build();
+        Problem.builder().title(status.getReasonPhrase()).status(status.value()).build();
     return handleExceptionInternal(ex, problem, headers, status, request);
   }
 
@@ -319,11 +310,7 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
       AsyncRequestTimeoutException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
     status = HttpStatus.INTERNAL_SERVER_ERROR;
     Problem problem =
-        Problem.builder()
-            .type(Problem.BLANK_TYPE)
-            .title(status.getReasonPhrase())
-            .status(status.value())
-            .build();
+        Problem.builder().title(status.getReasonPhrase()).status(status.value()).build();
     return handleExceptionInternal(ex, problem, headers, status, request);
   }
 
