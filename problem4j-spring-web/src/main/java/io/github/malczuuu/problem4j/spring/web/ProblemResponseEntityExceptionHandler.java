@@ -216,11 +216,7 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
       WebRequest request) {
     status = HttpStatus.BAD_REQUEST;
     Problem problem =
-        Problem.builder()
-            .title(status.getReasonPhrase())
-            .status(status.value())
-            .detail("Message not readable")
-            .build();
+        Problem.builder().title(status.getReasonPhrase()).status(status.value()).build();
     return handleExceptionInternal(ex, problem, headers, status, request);
   }
 
