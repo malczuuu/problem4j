@@ -123,7 +123,7 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
                         .map(MimeType::toString)
                         .collect(Collectors.joining(", "))
                     + " not acceptable")
-            .extension("supported", new ArrayList<>(ex.getSupportedMediaTypes()))
+            .extension("acceptable", new ArrayList<>(ex.getSupportedMediaTypes()))
             .build();
     return handleExceptionInternal(ex, problem, headers, status, request);
   }
