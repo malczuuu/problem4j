@@ -157,7 +157,7 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
                 "Missing "
                     + ex.getParameterName()
                     + " request param of type "
-                    + ex.getParameterType())
+                    + ex.getParameterType().toLowerCase())
             .extension("param", ex.getParameterName())
             .extension("type", ex.getParameterType().toLowerCase())
             .build();
@@ -196,14 +196,16 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
   protected ResponseEntity<Object> handleTypeMismatch(
       TypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
     status = HttpStatus.BAD_REQUEST;
-    Problem problem =
+    ProblemBuilder problemBuilder =
         Problem.builder()
             .title(status.getReasonPhrase())
             .status(status.value())
-            .detail("Type mismatch of " + ex.getPropertyName() + " property")
-            .extension("type", ex.getRequiredType())
-            .build();
-    return handleExceptionInternal(ex, problem, headers, status, request);
+            .detail("Type mismatch of " + ex.getPropertyName() + " property");
+    if (ex.getRequiredType() != null) {
+      problemBuilder =
+          problemBuilder.extension("type", ex.getRequiredType().getSimpleName().toLowerCase());
+    }
+    return handleExceptionInternal(ex, problemBuilder.build(), headers, status, request);
   }
 
   @Override
