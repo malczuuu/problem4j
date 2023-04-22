@@ -1,3 +1,12 @@
+apply plugin: "java-library"
+apply plugin: "maven-publish"
+
+sourceCompatibility = "17"
+
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     api("com.fasterxml.jackson.core:jackson-databind:2.14.2")
 
@@ -5,4 +14,33 @@ dependencies {
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.1")
+}
+
+tasks.named("test") {
+    useJUnitPlatform()
+}
+
+tasks.register('sourcesJar', Jar) {
+    dependsOn classes
+    archiveAppendix = "sources"
+    from sourceSets.main.allSource
+}
+
+tasks.register('javadocJar', Jar) {
+    dependsOn javadoc
+    archiveAppendix = "javadoc"
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
 }
