@@ -29,10 +29,9 @@ dependencies {
 
 compileJava.dependsOn(processResources)
 
-test {
+tasks.named("test") {
     useJUnitPlatform()
 }
-
 
 tasks.register('sourcesJar', Jar) {
     dependsOn classes
