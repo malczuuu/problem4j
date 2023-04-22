@@ -3,6 +3,3 @@ before_install:
 - sdk use java 17.0.6-open
 - sdk install gradle 7.6.1
 - sdk use gradle 7.6.1
-install:
-- gradle clean -Pgroup=com.github.malczuuu -Pversion=20b895f491 -xtest assemble publishToMavenLocal
-- rm gradle.properties
