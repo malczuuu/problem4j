@@ -38,3 +38,11 @@ artifacts {
 googleJavaFormat {
     toolVersion = "1.16.0"
 }
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
+}
