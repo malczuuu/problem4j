@@ -1,6 +1,5 @@
 plugins {
     id "net.nemerosa.versioning" version "2.8.2"
-    id "com.github.sherter.google-java-format" version "0.9" apply false
 }
 
 subprojects {
