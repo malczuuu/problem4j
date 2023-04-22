@@ -1,26 +1,23 @@
 package io.github.malczuuu.problem4j.spring.web;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy.KebabCaseStrategy;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy.LowerCaseStrategy;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy.SnakeCaseStrategy;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy.UpperCamelCaseStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies.KebabCaseStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies.LowerCaseStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies.UpperCamelCaseStrategy;
 import io.github.malczuuu.problem4j.core.Problem;
 import io.github.malczuuu.problem4j.core.ProblemBuilder;
 import io.github.malczuuu.problem4j.core.ProblemException;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.boot.autoconfigure.jackson.JacksonProperties;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.MimeType;
@@ -58,28 +55,36 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
   public ResponseEntity<Object> handleProblemException(ProblemException ex, WebRequest request) {
     Problem problem = ex.getProblem();
     HttpHeaders headers = new HttpHeaders();
-    HttpStatus status = HttpStatus.valueOf(problem.getStatus());
+    HttpStatusCode status = HttpStatus.valueOf(problem.getStatus());
     return handleExceptionInternal(ex, problem, headers, status, request);
   }
 
   @ExceptionHandler({Exception.class})
   public ResponseEntity<Object> handleOtherException(Exception ex, WebRequest request) {
-    HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+    HttpStatusCode status = HttpStatus.INTERNAL_SERVER_ERROR;
     Problem problem =
-        Problem.builder().title(status.getReasonPhrase()).status(status.value()).build();
+        Problem.builder().title(getReasonPhrase(status)).status(status.value()).build();
     return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+  }
+
+  private String getReasonPhrase(HttpStatusCode statusCode) {
+    HttpStatus status = HttpStatus.resolve(statusCode.value());
+    if (status != null) {
+      return status.getReasonPhrase();
+    }
+    return "";
   }
 
   @Override
   protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
       HttpRequestMethodNotSupportedException ex,
       HttpHeaders headers,
-      HttpStatus status,
+      HttpStatusCode status,
       WebRequest request) {
     status = HttpStatus.METHOD_NOT_ALLOWED;
     ProblemBuilder builder =
         Problem.builder()
-            .title(status.getReasonPhrase())
+            .title(getReasonPhrase(status))
             .status(status.value())
             .detail("Method " + ex.getMethod() + " not supported");
     if (ex.getSupportedMethods() != null) {
@@ -93,12 +98,12 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
   protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(
       HttpMediaTypeNotSupportedException ex,
       HttpHeaders headers,
-      HttpStatus status,
+      HttpStatusCode status,
       WebRequest request) {
     status = HttpStatus.UNSUPPORTED_MEDIA_TYPE;
     Problem problem =
         Problem.builder()
-            .title(status.getReasonPhrase())
+            .title(getReasonPhrase(status))
             .status(status.value())
             .detail("Media type " + ex.getContentType() + " not supported")
             .extension("supported", new ArrayList<>(ex.getSupportedMediaTypes()))
@@ -110,12 +115,12 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
   protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(
       HttpMediaTypeNotAcceptableException ex,
       HttpHeaders headers,
-      HttpStatus status,
+      HttpStatusCode status,
       WebRequest request) {
     status = HttpStatus.NOT_ACCEPTABLE;
     Problem problem =
         Problem.builder()
-            .title(status.getReasonPhrase())
+            .title(getReasonPhrase(status))
             .status(status.value())
             .detail(
                 "Media type "
@@ -130,11 +135,14 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
 
   @Override
   protected ResponseEntity<Object> handleMissingPathVariable(
-      MissingPathVariableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+      MissingPathVariableException ex,
+      HttpHeaders headers,
+      HttpStatusCode status,
+      WebRequest request) {
     status = HttpStatus.BAD_REQUEST;
     Problem problem =
         Problem.builder()
-            .title(status.getReasonPhrase())
+            .title(getReasonPhrase(status))
             .status(status.value())
             .detail("Missing " + ex.getVariableName() + " path variable")
             .extension("name", ex.getVariableName())
@@ -146,12 +154,12 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
   protected ResponseEntity<Object> handleMissingServletRequestParameter(
       MissingServletRequestParameterException ex,
       HttpHeaders headers,
-      HttpStatus status,
+      HttpStatusCode status,
       WebRequest request) {
     status = HttpStatus.BAD_REQUEST;
     Problem problem =
         Problem.builder()
-            .title(status.getReasonPhrase())
+            .title(getReasonPhrase(status))
             .status(status.value())
             .detail(
                 "Missing "
@@ -168,12 +176,12 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
   protected ResponseEntity<Object> handleServletRequestBindingException(
       ServletRequestBindingException ex,
       HttpHeaders headers,
-      HttpStatus status,
+      HttpStatusCode status,
       WebRequest request) {
     status = HttpStatus.BAD_REQUEST;
     Problem problem =
         Problem.builder()
-            .title(status.getReasonPhrase())
+            .title(getReasonPhrase(status))
             .status(status.value())
             .detail(ex.getMessage())
             .build();
@@ -184,21 +192,21 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
   protected ResponseEntity<Object> handleConversionNotSupported(
       ConversionNotSupportedException ex,
       HttpHeaders headers,
-      HttpStatus status,
+      HttpStatusCode status,
       WebRequest request) {
     status = HttpStatus.INTERNAL_SERVER_ERROR;
     Problem problem =
-        Problem.builder().title(status.getReasonPhrase()).status(status.value()).build();
+        Problem.builder().title(getReasonPhrase(status)).status(status.value()).build();
     return handleExceptionInternal(ex, problem, headers, status, request);
   }
 
   @Override
   protected ResponseEntity<Object> handleTypeMismatch(
-      TypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+      TypeMismatchException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
     status = HttpStatus.BAD_REQUEST;
     ProblemBuilder problemBuilder =
         Problem.builder()
-            .title(status.getReasonPhrase())
+            .title(getReasonPhrase(status))
             .status(status.value())
             .detail("Type mismatch of " + ex.getPropertyName() + " property");
     if (ex.getRequiredType() != null) {
@@ -212,11 +220,11 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
   protected ResponseEntity<Object> handleHttpMessageNotReadable(
       HttpMessageNotReadableException ex,
       HttpHeaders headers,
-      HttpStatus status,
+      HttpStatusCode status,
       WebRequest request) {
     status = HttpStatus.BAD_REQUEST;
     Problem problem =
-        Problem.builder().title(status.getReasonPhrase()).status(status.value()).build();
+        Problem.builder().title(getReasonPhrase(status)).status(status.value()).build();
     return handleExceptionInternal(ex, problem, headers, status, request);
   }
 
@@ -224,11 +232,11 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
   protected ResponseEntity<Object> handleHttpMessageNotWritable(
       HttpMessageNotWritableException ex,
       HttpHeaders headers,
-      HttpStatus status,
+      HttpStatusCode status,
       WebRequest request) {
     status = HttpStatus.INTERNAL_SERVER_ERROR;
     Problem problem =
-        Problem.builder().title(status.getReasonPhrase()).status(status.value()).build();
+        Problem.builder().title(getReasonPhrase(status)).status(status.value()).build();
     return handleExceptionInternal(ex, problem, headers, status, request);
   }
 
@@ -236,11 +244,11 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
   protected ResponseEntity<Object> handleMethodArgumentNotValid(
       MethodArgumentNotValidException ex,
       HttpHeaders headers,
-      HttpStatus status,
+      HttpStatusCode status,
       WebRequest request) {
     status = HttpStatus.BAD_REQUEST;
     Problem problem =
-        from(ex.getBindingResult()).title(status.getReasonPhrase()).status(status.value()).build();
+        from(ex.getBindingResult()).title(getReasonPhrase(status)).status(status.value()).build();
     return handleExceptionInternal(ex, problem, headers, status, request);
   }
 
@@ -248,12 +256,12 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
   protected ResponseEntity<Object> handleMissingServletRequestPart(
       MissingServletRequestPartException ex,
       HttpHeaders headers,
-      HttpStatus status,
+      HttpStatusCode status,
       WebRequest request) {
     status = HttpStatus.BAD_REQUEST;
     Problem problem =
         Problem.builder()
-            .title(status.getReasonPhrase())
+            .title(getReasonPhrase(status))
             .status(status.value())
             .detail("Missing " + ex.getRequestPartName() + " request part")
             .extension("param", ex.getRequestPartName())
@@ -263,10 +271,10 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
 
   @Override
   protected ResponseEntity<Object> handleBindException(
-      BindException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+      BindException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
     status = HttpStatus.BAD_REQUEST;
     Problem problem =
-        from(ex.getBindingResult()).title(status.getReasonPhrase()).status(status.value()).build();
+        from(ex.getBindingResult()).title(getReasonPhrase(status)).status(status.value()).build();
     return handleExceptionInternal(ex, problem, headers, status, request);
   }
 
@@ -282,42 +290,44 @@ public class ProblemResponseEntityExceptionHandler extends ResponseEntityExcepti
     if (jacksonProperties.getPropertyNamingStrategy() == null) {
       return field;
     }
-    switch (jacksonProperties.getPropertyNamingStrategy()) {
-      case "SNAKE_CASE":
-        return ((SnakeCaseStrategy) PropertyNamingStrategy.SNAKE_CASE).translate(field);
-      case "UPPER_CAMEL_CASE":
-        return ((UpperCamelCaseStrategy) PropertyNamingStrategy.UPPER_CAMEL_CASE).translate(field);
-      case "KEBAB_CASE":
-        return ((KebabCaseStrategy) PropertyNamingStrategy.KEBAB_CASE).translate(field);
-      case "LOWER_CASE":
-        return ((LowerCaseStrategy) PropertyNamingStrategy.LOWER_CASE).translate(field);
-      case "LOWER_CAMEL_CASE":
-      default:
-        return field;
-    }
+    return switch (jacksonProperties.getPropertyNamingStrategy()) {
+      case "SNAKE_CASE" -> ((SnakeCaseStrategy) PropertyNamingStrategies.SNAKE_CASE)
+          .translate(field);
+      case "UPPER_CAMEL_CASE" -> ((UpperCamelCaseStrategy)
+              PropertyNamingStrategies.UPPER_CAMEL_CASE)
+          .translate(field);
+      case "KEBAB_CASE" -> ((KebabCaseStrategy) PropertyNamingStrategies.KEBAB_CASE)
+          .translate(field);
+      case "LOWER_CASE" -> ((LowerCaseStrategy) PropertyNamingStrategies.LOWER_CASE)
+          .translate(field);
+      default -> field;
+    };
   }
 
   @Override
   protected ResponseEntity<Object> handleNoHandlerFoundException(
-      NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+      NoHandlerFoundException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
     status = HttpStatus.NOT_FOUND;
     Problem problem =
-        Problem.builder().title(status.getReasonPhrase()).status(status.value()).build();
+        Problem.builder().title(getReasonPhrase(status)).status(status.value()).build();
     return handleExceptionInternal(ex, problem, headers, status, request);
   }
 
   @Override
   protected ResponseEntity<Object> handleAsyncRequestTimeoutException(
-      AsyncRequestTimeoutException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+      AsyncRequestTimeoutException ex,
+      HttpHeaders headers,
+      HttpStatusCode status,
+      WebRequest request) {
     status = HttpStatus.INTERNAL_SERVER_ERROR;
     Problem problem =
-        Problem.builder().title(status.getReasonPhrase()).status(status.value()).build();
+        Problem.builder().title(getReasonPhrase(status)).status(status.value()).build();
     return handleExceptionInternal(ex, problem, headers, status, request);
   }
 
   @Override
   protected ResponseEntity<Object> handleExceptionInternal(
-      Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
+      Exception ex, Object body, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
     if (body instanceof Problem) {
       headers.setContentType(MediaType.APPLICATION_PROBLEM_JSON);
     }

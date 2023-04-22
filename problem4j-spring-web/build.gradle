@@ -1,28 +1,27 @@
 apply plugin: "java-library"
-apply plugin: "maven"
+apply plugin: "com.github.sherter.google-java-format"
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = "17"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compileOnly("org.springframework:spring-webmvc:5.1.0.RELEASE")
-    compileOnly("org.springframework.boot:spring-boot-autoconfigure:2.0.0.RELEASE")
-    compileOnly("org.springframework.boot:spring-boot-configuration-processor:2.0.0.RELEASE")
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:2.0.0.RELEASE")
-    compileOnly("javax.servlet:javax.servlet-api:3.1.0")
+    compileOnly("org.springframework:spring-webmvc:6.0.0")
+    compileOnly("org.springframework.boot:spring-boot-autoconfigure:3.0.0")
+    compileOnly("org.springframework.boot:spring-boot-configuration-processor:3.0.0")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:3.0.0")
+    compileOnly("jakarta.servlet:jakarta.servlet-api:6.0.0")
 
-    api("org.slf4j:slf4j-api:1.7.0")
+    api("org.slf4j:slf4j-api:2.0.0")
     api project(":problem4j-jackson")
 
-    testRuntimeOnly("javax.servlet:javax.servlet-api:3.1.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.2")
+    testRuntimeOnly("jakarta.servlet:jakarta.servlet-api:6.0.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
 
-    testImplementation("org.springframework.boot:spring-boot-starter-test:2.0.0.RELEASE") {
+    testImplementation("org.springframework.boot:spring-boot-starter-test:3.0.0") {
         exclude group: "junit", module: "junit"
     }
 }
@@ -34,17 +33,23 @@ test {
 }
 
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = "sources"
+tasks.register('sourcesJar', Jar) {
+    dependsOn classes
+    archiveAppendix = "sources"
     from sourceSets.main.allSource
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = "javadoc"
+tasks.register('javadocJar', Jar) {
+    dependsOn javadoc
+    archiveAppendix = "javadoc"
     from javadoc.destinationDir
 }
 
 artifacts {
     archives sourcesJar
     archives javadocJar
+}
+
+googleJavaFormat {
+    toolVersion = "1.16.0"
 }
