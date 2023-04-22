@@ -1,12 +1,3 @@
-apply plugin: "java-library"
-apply plugin: "maven-publish"
-
-sourceCompatibility = "17"
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     compileOnly("org.springframework:spring-webmvc:6.0.0")
     compileOnly("org.springframework.boot:spring-boot-autoconfigure:3.0.0")
@@ -27,32 +18,3 @@ dependencies {
 }
 
 compileJava.dependsOn(processResources)
-
-tasks.named("test") {
-    useJUnitPlatform()
-}
-
-tasks.register('sourcesJar', Jar) {
-    dependsOn classes
-    archiveAppendix = "sources"
-    from sourceSets.main.allSource
-}
-
-tasks.register('javadocJar', Jar) {
-    dependsOn javadoc
-    archiveAppendix = "javadoc"
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
-}
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            from components.java
-        }
-    }
-}

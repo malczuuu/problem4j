@@ -1,8 +1,35 @@
-plugins {
-    id "net.nemerosa.versioning" version "2.8.2"
+allprojects {
+    group = "io.github.malczuuu.problem4j"
+    version = "3.0.0-SNAPSHOT"
 }
 
 subprojects {
-    group = "io.github.malczuuu.problem4j"
-    version = "3.0.0-SNAPSHOT"
+    apply plugin: 'java-library'
+    apply plugin: 'maven-publish'
+
+    sourceCompatibility = "17"
+
+    repositories {
+        mavenCentral()
+    }
+
+    tasks.named("test") {
+        useJUnitPlatform()
+    }
+
+    java {
+        withSourcesJar()
+        withJavadocJar()
+    }
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId project.group
+                artifactId project.name
+                version project.version
+                from components.java
+            }
+        }
+    }
 }
