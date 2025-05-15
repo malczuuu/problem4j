@@ -2,7 +2,7 @@
 
 Simple Java package of libraries implementing [RFC7807][rfc7807].
 
-> **Note** that this library was originally developed here as a monorepo. Right now it was separated into multiple
+> **Note** that this library was originally developed here as a monorepo. Right now it is separated into multiple
 > repositories, each versioned individually. For old versions see other branches of this repository.
 
 This project is not published to Maven Central Repository at the moment. Instead, it relies on [JitPack][jitpack] for
