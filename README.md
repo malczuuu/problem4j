@@ -15,7 +15,7 @@ seeing if and how it will evolve.
 | [`problem4j-jackson`][problem4j-jackson]       | [![](https://jitpack.io/v/malczuuu/problem4j-jackson.svg)](https://jitpack.io/#malczuuu/problem4j-jackson)       |
 | [`problem4j-spring-web`][problem4j-spring-web] | [![](https://jitpack.io/v/malczuuu/problem4j-spring-web.svg)](https://jitpack.io/#malczuuu/problem4j-spring-web) |
 
-Each of the mentioned libraries is documented in its own `README.md` file.
+Each of the mentioned libraries is documented in its own `README.md` file. See there for more information.
 
 [rfc7807]: https://tools.ietf.org/html/rfc7807
 
