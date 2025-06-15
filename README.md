@@ -13,27 +13,39 @@ seeing if and how it will evolve.
 
 Each of the mentioned libraries is documented in its own `README.md` file.
 
-### Problem4J Core [![](https://jitpack.io/v/malczuuu/problem4j-core.svg)](https://jitpack.io/#malczuuu/problem4j-core)
+### Problem4J Core
 
-[`problem4j-core`](https://github.com/malczuuu/problem4j-core)
+[`problem4j-core`][problem4j-core]
 
 Minimal, framework-agnostic Java model of [RFC 7807][rfc7807] "Problem Details".
 
-### Problem4J Jackson [![](https://jitpack.io/v/malczuuu/problem4j-jackson.svg)](https://jitpack.io/#malczuuu/problem4j-jackson)
+### Problem4J Jackson
 
-[`problem4j-jackson`](https://github.com/malczuuu/problem4j-jackson)
+[`problem4j-jackson`][problem4j-jackson]
 
 Integration of `problem4j-core` with [Jackson's `ObjectMapper`][jackson].
 
-### Problem4J Spring Web [![](https://jitpack.io/v/malczuuu/problem4j-spring-web.svg)](https://jitpack.io/#malczuuu/problem4j-spring-web)
+### Problem4J Spring Web
 
-[`problem4j-spring-web`](https://github.com/malczuuu/problem4j-spring-web)
+[`problem4j-spring-web`][problem4j-spring-web]
 
 Integration of `problem4j-core` (and `problem4j-jackson`) with Spring Boot REST exception handlers via
 `@ControllerAdvice`.
+
+## JitPack
+
+| Library                                        | JitPack                                                                                                          |
+|------------------------------------------------|------------------------------------------------------------------------------------------------------------------|
+| [`problem4j-core`][problem4j-core]             | [![](https://jitpack.io/v/malczuuu/problem4j-core.svg)](https://jitpack.io/#malczuuu/problem4j-core)             |
+| [`problem4j-jackson`][problem4j-jackson]       | [![](https://jitpack.io/v/malczuuu/problem4j-jackson.svg)](https://jitpack.io/#malczuuu/problem4j-jackson)       |
+| [`problem4j-spring-web`][problem4j-spring-web] | [![](https://jitpack.io/v/malczuuu/problem4j-spring-web.svg)](https://jitpack.io/#malczuuu/problem4j-spring-web) |
 
 [rfc7807]: https://tools.ietf.org/html/rfc7807
 
 [jitpack]: https://jitpack.io/
 
 [jackson]: https://github.com/FasterXML/jackson
+
+[problem4j-core]: https://github.com/malczuuu/problem4j-core
+[problem4j-jackson]: https://github.com/malczuuu/problem4j-jackson
+[problem4j-spring-web]: https://github.com/malczuuu/problem4j-spring-web
