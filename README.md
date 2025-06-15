@@ -29,8 +29,8 @@ Integration of `problem4j-core` with [Jackson's `ObjectMapper`][jackson].
 
 [`problem4j-spring-web`](https://github.com/malczuuu/problem4j-spring-web)
 
-Integration of `problem4j-core` (and `problem4j-jackson`) with Spring Boot REST exception handlers
-(`@ControllerAdvice`).
+Integration of `problem4j-core` (and `problem4j-jackson`) with Spring Boot REST exception handlers via
+`@ControllerAdvice`.
 
 [rfc7807]: https://tools.ietf.org/html/rfc7807
 
