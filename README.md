@@ -24,5 +24,7 @@ Each of the mentioned libraries is documented in its own `README.md` file. See t
 [jackson]: https://github.com/FasterXML/jackson
 
 [problem4j-core]: https://github.com/malczuuu/problem4j-core
+
 [problem4j-jackson]: https://github.com/malczuuu/problem4j-jackson
+
 [problem4j-spring-web]: https://github.com/malczuuu/problem4j-spring-web
